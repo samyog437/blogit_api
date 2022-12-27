@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 
 const user_router = require('./routes/user_routes')
+const blog_router = require('./routes/blog_routes')
 
 const app = express()
 const port = 3000
@@ -19,7 +20,7 @@ app.use(express.json())
 
 
 app.use('/user', user_router)
-
+app.use('/blogs', blog_router)
 
 
 app.use((err, req, res, next) => {
