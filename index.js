@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const user_router = require('./routes/user_routes')
 
 const app = express()
-const port = 3001
+const port = 3000
 
 mongoose.connect('mongodb://127.0.0.1:27017/blogit')
     .then(() => {
