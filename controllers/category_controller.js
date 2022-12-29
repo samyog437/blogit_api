@@ -14,7 +14,15 @@ const createCategory = (req, res, next) => {
         }).catch(next)
 }
 
+const getAcategory = (req, res, next) => {
+    Category.findById(req.params.category_id)
+    .populate('blogs')
+        .then(category => res.json(category))
+        .catch(next)
+}
+
 module.exports = {
     getAllCategories,
-    createCategory
+    createCategory,
+    getAcategory
 }
