@@ -11,7 +11,11 @@ router.route('/')
     .delete(blog_controller.deleteAllBlogs)
 
 router.route('/:id')
+    .post((req, res) => {
+        res.status(501).send({"reply": "Can't post blog here"})
+    })
     .put(blog_controller.updateBlogById)
     .get(blog_controller.getABlog)
+    .delete(blog_controller.deleteABlog)
 
 module.exports = router
