@@ -5,5 +5,13 @@ const blog_controller = require('../controllers/blog_controller')
 router.route('/')
     .post(blog_controller.createBlog)
     .get(blog_controller.getAllBlogs)
+    .put((req, res) => {
+        res.status(501).send({"reply": "Can't update all blogs"})
+    })
+    .delete(blog_controller.deleteAllBlogs)
+
+router.route('/:id')
+    .put(blog_controller.updateBlogById)
+    .get(blog_controller.getABlog)
 
 module.exports = router

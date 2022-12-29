@@ -17,6 +17,7 @@ router.post('/register',(req, res, next) => {
                 if(err) return next(err)
                 user = new User()
                 user.username = req.body.username
+                user.email = req.body.email
                 user.password = hash
                 if(req.body.role) user.role = req.body.role
                 user.save().then(user=>{
@@ -24,6 +25,7 @@ router.post('/register',(req, res, next) => {
                         'status': 'User has registered successfully',
                         userId: user._id,
                         username: user.username,
+                        email: user.email,
                         role: user.role
                     })
                 }).catch(next)
@@ -36,7 +38,7 @@ router.post('/login', (req,res,next) => {
         .then(user => {
             if(user==null){
                 let err = new Error(`User ${req.body.username} has not been registered`)
-                req.status(404)
+                res.status(404)
                 return next(err)
             }
             bcrypt.compare(req.body.password, user.password, (err, status) => {
@@ -49,7 +51,8 @@ router.post('/login', (req,res,next) => {
                 let data = {
                     userId: user._id,
                     username: user.username,
-                    role: user.role
+                    email: user.email,
+                    role: user.role,
                 }
                 jwt.sign(data, process.env.SECRET,
                     {'expiresIn': '1d'}, (err, token) => {

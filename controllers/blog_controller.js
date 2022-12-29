@@ -18,7 +18,31 @@ const createBlog = (req,res,next) => {
         }).catch(next)
 }
 
+const updateBlogById = (req, res, next) => {
+    Blog.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
+        .then((blog) => {
+            res.json(blog)
+        }).catch(next)
+}
+
+const deleteAllBlogs = (req, res, next) => {
+    Blog.deleteMany()
+        .then((blog) => {
+            res.json(blog)
+        }).catch(next)
+}
+
+const getABlog = (req, res, next) => {
+    Blog.findById(req.params.id)
+        .then((blog) => {
+            res.json(blog)
+        }).catch(next)
+}
+
 module.exports = {
     createBlog,
     getAllBlogs,
+    updateBlogById,
+    deleteAllBlogs,
+    getABlog,
 }
