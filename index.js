@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const user_router = require('./routes/user_routes')
 const blog_router = require('./routes/blog_routes')
 const category_router = require('./routes/category_routes')
+const auth = require('./middleware/auth')
 
 const app = express()
 const port = 3000

@@ -1,21 +1,39 @@
 const express = require('express')
+const { verify } = require('jsonwebtoken')
 const router = express.Router()
 const blog_controller = require('../controllers/blog_controller')
+const comment_controller = require('../controllers/comments_controller')
+const {verifyUser, verifyAdmin} = require('../middleware/auth')
 
 router.route('/')
-    .post(blog_controller.createBlog)
+    .post(verifyUser, blog_controller.createBlog)
     .get(blog_controller.getAllBlogs)
     .put((req, res) => {
         res.status(501).send({"reply": "Can't update all blogs"})
     })
-    .delete(blog_controller.deleteAllBlogs)
+    .delete(verifyAdmin, blog_controller.deleteAllBlogs)
 
-router.route('/:id')
+router.use(verifyUser)
+    .route('/:id')
     .post((req, res) => {
         res.status(501).send({"reply": "Can't post blog here"})
     })
     .put(blog_controller.updateBlogById)
     .get(blog_controller.getABlog)
     .delete(blog_controller.deleteABlog)
+
+router.use(verifyUser)
+    .route('/:id/comments')
+    .get(comment_controller.getAllComments)
+    .post(comment_controller.createComment)
+    .put((req, res) => res.status(501).json({'reply':'Cannot update all comments'}))
+    .delete(comment_controller.deleteAllComments)
+
+router.use(verifyUser)
+    .route('/:id/comments/:comment_id')
+    .get(comment_controller.getCommentById)
+    .post((req, res) => res.status(501).json({'reply':'Cannot create comment here'}))
+    .put(comment_controller.updateCommentById)
+    .delete(comment_controller.deleteCommentById)
 
 module.exports = router

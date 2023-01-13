@@ -58,9 +58,28 @@ const updateCommentById = (req, res, next) => {
         }).catch(next)
 }
 
+const deleteCommentById = (req, res, next) => {
+    Blog.findById(req.params.id)
+        .then(blog => {
+            comment = blog.comments.find((item) => item.id == req.params.commenter_id)
+            if(comment.user == req.user.userId) {
+                let deletedComments = blog.comments.filter((item) => {
+                        if(item.commenter_id == req.user.userId)
+                    return item.id != req.params.commenter_id
+                })
+                blog.comments = deletedComments
+                blog.save().then(b => res.json(b.comments))
+            } else {
+                res.status(400).send({"reply": "You are not authorized"})
+            }
+        }).catch(next)
+}
+
 module.exports = {
     getAllComments,
     createComment,
     deleteAllComments,
     getCommentById,
+    updateCommentById,
+    deleteCommentById
 }
