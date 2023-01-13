@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const user_router = require('./routes/user_routes')
 const blog_router = require('./routes/blog_routes')
 const category_router = require('./routes/category_routes')
+const profile_router = require('./routes/profile_routes')
 const auth = require('./middleware/auth')
 
 const app = express()
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use('/user', user_router)
 app.use('/blogs', blog_router)
 app.use('/category', category_router)
+app.use('/profile', auth.verifyUser, profile_router)
 
 
 app.use((err, req, res, next) => {
