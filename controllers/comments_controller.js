@@ -20,7 +20,17 @@ const createComment = (req, res, next) => {
     }).catch(next)
 }
 
+const deleteAllComments = (req, res, next) => {
+    Blog.findById(req.params.id)
+        .then((blog) => {
+            blog.comments = []
+            blog.save()
+                .then(b => res.json(b.comments))
+        }).catch(next)
+}
+
 module.exports = {
     getAllComments,
     createComment,
+    deleteAllComments,
 }
