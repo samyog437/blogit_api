@@ -1,5 +1,20 @@
 const mongoose = require('mongoose')
 
+const commentSchema = mongoose.Schema({
+    body: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    commenter_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
+})
+
 const blogSchema = mongoose.Schema({
     title: {
         type: String,
@@ -8,6 +23,11 @@ const blogSchema = mongoose.Schema({
     content: {
         type: String,
         required: true
+    },
+    comments: [commentSchema],
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
     }
 }, {timestamps: true})
 
