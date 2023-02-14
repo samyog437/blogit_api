@@ -33,11 +33,15 @@ const deleteAllBlogs = (req, res, next) => {
 }
 
 const getABlog = (req, res, next) => {
-    Blog.findById(req.params.id)
+    Blog.findByIdAndUpdate(
+        req.params.id,
+        {$inc: {view:1}},
+        {new: true}
+        )
         .populate('category')
         .then((blog) => {
             res.json(blog)
-        }).catch(next)
+        }).catch(next)  
 }
 
 const deleteABlog = (req, res, next) => {

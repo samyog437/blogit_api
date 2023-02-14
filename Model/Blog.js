@@ -24,11 +24,15 @@ const blogSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    view: {
+        type: Number,
+        default: 0
+    },
     comments: [commentSchema],
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     }
-}, {timestamps: true})
+}, {timestamps: true});
 
 module.exports = mongoose.model('Blog', blogSchema)

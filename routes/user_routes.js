@@ -5,7 +5,7 @@ const User = require('../Model/User')
 
 const router = express.Router()
 
-router.post('/register',(req, res, next) => {
+router.post('/',(req, res, next) => {
     User.findOne({username: req.body.username})
         .then(user => {
             if(user != null){
