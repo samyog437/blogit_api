@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const mongoose = require('mongoose')
 
 const user_router = require('./routes/user_routes')
@@ -9,6 +10,7 @@ const profile_router = require('./routes/profile_routes')
 const auth = require('./middleware/auth')
 
 const app = express()
+app.use(cors())
 const port = 3000
 
 mongoose.connect('mongodb://127.0.0.1:27017/blogit')
