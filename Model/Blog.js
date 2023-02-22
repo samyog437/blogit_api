@@ -16,6 +16,9 @@ const commentSchema = mongoose.Schema({
 })
 
 const blogSchema = mongoose.Schema({
+    image: {
+        type: String,
+    },
     title: {
         type: String,
         required: true

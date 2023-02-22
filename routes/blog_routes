@@ -4,16 +4,17 @@ const router = express.Router()
 const blog_controller = require('../controllers/blog_controller')
 const comment_controller = require('../controllers/comments_controller')
 const {verifyUser, verifyAdmin} = require('../middleware/auth')
+const upload = require('../middleware/upload')
 
 router.route('/')
-    .post(verifyUser, blog_controller.createBlog)
+    .post(verifyUser, upload.single('image'), blog_controller.createBlog)
     .get(blog_controller.getAllBlogs)
     .put((req, res) => {
         res.status(501).send({"reply": "Can't update all blogs"})
     })
     .delete(verifyAdmin, blog_controller.deleteAllBlogs)
 
-router.use(verifyUser)
+router
     .route('/:id')
     .post((req, res) => {
         res.status(501).send({"reply": "Can't post blog here"})

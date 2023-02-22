@@ -9,8 +9,9 @@ const getAllBlogs = (req, res, next) => {
 
 const createBlog = (req,res,next) => {
     let blog = {
-        'title': req.body.title,
-        'content': req.body.content
+        image: req.file.filename,
+        title: req.body.title,
+        content: req.body.content
     }
     Blog.create(blog)
         .then((blog) => {
@@ -21,6 +22,7 @@ const createBlog = (req,res,next) => {
 const updateBlogById = (req, res, next) => {
     Blog.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
         .then((blog) => {
+            console.log(blog)
             res.json(blog)
         }).catch(next)
 }
@@ -33,6 +35,7 @@ const deleteAllBlogs = (req, res, next) => {
 }
 
 const getABlog = (req, res, next) => {
+    console.log("getABlog function called"); // add this line
     Blog.findByIdAndUpdate(
         req.params.id,
         {$inc: {view:1}},
@@ -40,6 +43,7 @@ const getABlog = (req, res, next) => {
         )
         .populate('category')
         .then((blog) => {
+            console.log("Updated blog:", blog);
             res.json(blog)
         }).catch(next)  
 }

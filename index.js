@@ -29,6 +29,8 @@ app.use('/blogs', blog_router)
 app.use('/category', category_router)
 app.use('/profile', auth.verifyUser, profile_router)
 
+app.use('/image', express.static('uploads'))
+
 
 app.use((err, req, res, next) => {
     console.log(err.stack)
