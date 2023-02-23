@@ -55,7 +55,7 @@ router.post('/login', (req,res,next) => {
                     role: user.role,
                 }
                 jwt.sign(data, process.env.SECRET,
-                    {'expiresIn': '1d'}, (err, token) => {
+                    {'expiresIn': '30d'}, (err, token) => {
                         if(err) return next(err)
                         res.json({
                             'status': 'User was logged in successfully',
