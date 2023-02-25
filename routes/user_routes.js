@@ -58,6 +58,7 @@ router.post('/login', (req,res,next) => {
                     {'expiresIn': '30d'}, (err, token) => {
                         if(err) return next(err)
                         res.json({
+                            userId: user._id,
                             'status': 'User was logged in successfully',
                             token: token
                         })

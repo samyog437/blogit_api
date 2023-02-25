@@ -19,7 +19,7 @@ router
     .post((req, res) => {
         res.status(501).send({"reply": "Can't post blog here"})
     })
-    .put(upload.single('image'),blog_controller.updateBlogById)
+    .put(verifyUser,upload.single('image'),blog_controller.updateBlogById)
     .get(blog_controller.getABlog)
     .delete(blog_controller.deleteABlog)
 
