@@ -40,8 +40,12 @@ const createBlog = (req,res,next) => {
 // }
 
 const updateBlogById = (req, res, next) => {
+    console.log('yay')
+    console.log(req.params.id)
     Blog.findById(req.params.id)
         .then((blog) => {
+            console.log(blog.user.toString())
+            console.log(req.user.userId)
             if (blog.user.toString() !== req.user.userId) {
                 let err = new Error('You are not authorized to update this blog post')
                 res.status(403)
@@ -81,12 +85,33 @@ const getABlog = (req, res, next) => {
 
 
 
+// const deleteABlog = (req, res, next) => {
+//     Blog.findByIdAndDelete(req.params.id)
+//         .then((blog) => {
+//             res.json(blog)
+//         }).catch(next)
+// }
+
 const deleteABlog = (req, res, next) => {
-    Blog.findByIdAndDelete(req.params.id)
-        .then((blog) => {
+    console.log('Received userId: ' + req.user.userId);
+    console.log('Received blogId: ' + req.params.id);
+    
+    Blog.findById(req.params.id)
+      .then((blog) => {
+        if (blog.user.toString() !== req.user.userId) {
+          let err = new Error('You are not authorized to delete this blog post');
+          res.status(403);
+          return next(err);
+        }
+        
+        Blog.findByIdAndDelete(req.params.id)
+          .then((blog) => {
+            console.log('Blog post deleted successfully');
             res.json(blog)
-        }).catch(next)
-}
+          }).catch(next);
+      }).catch(next);
+  };
+  
 
 module.exports = {
     createBlog,

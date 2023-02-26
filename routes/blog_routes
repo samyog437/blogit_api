@@ -21,7 +21,7 @@ router
     })
     .put(verifyUser,upload.single('image'),blog_controller.updateBlogById)
     .get(blog_controller.getABlog)
-    .delete(blog_controller.deleteABlog)
+    .delete(verifyUser,blog_controller.deleteABlog)
 
 router.use(verifyUser)
     .route('/:id/comments')
