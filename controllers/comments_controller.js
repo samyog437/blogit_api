@@ -2,10 +2,19 @@ const Blog = require("../Model/Blog")
 
 const getAllComments = (req, res, next) => {
     Blog.findById(req.params.id)
-    .then((blog) => {
-        res.json(blog.comments)
-    }).catch(next)
+        .populate({
+            path: 'comments',
+            populate: {
+                path: 'commenter_id',
+                select: 'username'
+            }
+        })
+        .then((blog) => {
+            res.json(blog.comments)
+        })
+        .catch(next)
 }
+
 
 const createComment = (req, res, next) => {
     Blog.findById(req.params.id)

@@ -76,9 +76,14 @@ const getABlog = (req, res, next) => {
         {new: true}
         )
         .populate('user','username')
+        .populate('comments.commenter_id', 'username')
         .then((blog) => {
             const username = blog.user.username;
             console.log("Username:", username);
+            blog.comments.forEach((comment) => {
+                const commenterUsername = comment.commenter_id.username;
+                console.log("Commenter Username:", commenterUsername);
+            });
             res.json(blog)
         }).catch(next)  
 }
