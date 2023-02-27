@@ -22,6 +22,7 @@ const getUserByComment = (req, res, next) => {
 
 
 const createComment = (req, res, next) => {
+    console.log(req.body)
     Blog.findById(req.params.id)
     .then((blog) => {
         let comment = {
