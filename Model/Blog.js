@@ -12,7 +12,10 @@ const commentSchema = mongoose.Schema({
     commenter_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+    commenterName: {
+        type: String,
+    },
 })
 
 const blogSchema = mongoose.Schema({

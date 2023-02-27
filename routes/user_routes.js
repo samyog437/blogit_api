@@ -2,6 +2,8 @@ const express = require('express')
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const User = require('../Model/User')
+const { verifyUser } = require('../middleware/auth')
+const profile_controller = require('../controllers/profile_controller')
 
 const router = express.Router()
 
@@ -66,5 +68,8 @@ router.post('/login', (req,res,next) => {
             })
         }).catch(next)
 })
+
+router.route('/:user_id')
+    .get(verifyUser, profile_controller.getUserData)
 
 module.exports = router

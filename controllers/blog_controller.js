@@ -84,6 +84,7 @@ const getABlog = (req, res, next) => {
                 const commenterUsername = comment.commenter_id.username;
                 console.log("Commenter Username:", commenterUsername);
             });
+            // res.json({blog:blog, commenterDetail:blog.comments, message:'This is Commenter Detail'})
             res.json(blog)
         }).catch(next)  
 }

@@ -5,27 +5,29 @@ const upload = require('../middleware/upload')
 const { verifyUser } = require('../middleware/auth')
 const profile_controller = require('../controllers/profile_controller')
 
-router.route('/')
-.get((req, res, next) => {
-    Profile.find()
-    .then(profiles => res.json(profiles))
-    .catch(next)
-})
+// router.route('/')
+// .get((req, res, next) => {
+//     Profile.find()
+//     .then(profiles => res.json(profiles))
+//     .catch(next)
+// })
 
-.post(upload.single("profile"), (req, res, next) => {
-    console.log(req.file)
-    console.log(req.body)
-    let profile = {
-        ...req.body,
-        image: req.file.filename,
-        user: req.user_id
-    }
-    Profile.create(profile)
-    .then(profile => res.json(profile))
-    .catch(next)
-})
+// .post(upload.single("profile"), (req, res, next) => {
+//     console.log(req.file)
+//     console.log(req.body)
+//     let profile = {
+//         ...req.body,
+//         image: req.file.filename,
+//         user: req.user_id
+//     }
+//     Profile.create(profile)
+//     .then(profile => res.json(profile))
+//     .catch(next)
+// })
 
-    router.route('/blogs')
-        .get(verifyUser,profile_controller.getUserBlog)
+router.route('/blogs')
+    .get(verifyUser,profile_controller.getUserBlog)
+
+
 
 module.exports = router

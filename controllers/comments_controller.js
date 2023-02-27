@@ -15,13 +15,19 @@ const getAllComments = (req, res, next) => {
         .catch(next)
 }
 
+const getUserByComment = (req, res, next) => {
+    Comment.findById(req.params.id)
+    
+}
+
 
 const createComment = (req, res, next) => {
     Blog.findById(req.params.id)
     .then((blog) => {
         let comment = {
             "body": req.body.body,
-            "commenter_id": req.user.userId
+            "commenter_id": req.user.userId,
+            "commenterName": req.user.username,
         }
         blog.comments.push(comment)
         blog.save()
