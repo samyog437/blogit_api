@@ -71,5 +71,6 @@ router.post('/login', (req,res,next) => {
 
 router.route('/:user_id')
     .get(verifyUser, profile_controller.getUserData)
+    .put(verifyUser, profile_controller.updateUser)
 
 module.exports = router

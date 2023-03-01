@@ -19,10 +19,12 @@ const getAllUserBlogs = (req, res, next) => {
 
 const createBlog = (req,res,next) => {
     let blog = {
-        image: req.file.filename,
         title: req.body.title,
         content: req.body.content,
         user: req.user.userId
+    };
+    if(req.file) {
+        blog.image = req.file.filename;
     }
     console.log(blog)
     Blog.create(blog)
