@@ -12,7 +12,7 @@ router.route('/')
     .put((req, res) => {
         res.status(501).send({"reply": "Can't update all blogs"})
     })
-    .delete(verifyUser,blog_controller.deleteAllBlogs)
+    .delete(verifyUser, verifyAdmin,blog_controller.deleteAllBlogs)
 
 router
     .route('/:id')
@@ -28,13 +28,13 @@ router
     .get(comment_controller.getAllComments)
     .post(verifyUser,comment_controller.createComment)
     .put((req, res) => res.status(501).json({'reply':'Cannot update all comments'}))
-    .delete(verifyUser,comment_controller.deleteAllComments)
+    .delete(verifyUser, verifyAdmin,comment_controller.deleteAllComments)
 
-router.use(verifyUser)
+router
     .route('/:id/comments/:comment_id')
     .get(comment_controller.getCommentById)
     .post((req, res) => res.status(501).json({'reply':'Cannot create comment here'}))
-    .put(comment_controller.updateCommentById)
-    .delete(comment_controller.deleteCommentById)
+    .put(verifyUser,comment_controller.updateCommentById)
+    .delete(verifyUser,comment_controller.deleteCommentById)
 
 module.exports = router

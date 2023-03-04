@@ -29,7 +29,7 @@ app.use(express.json())
 app.use('/user', user_router)
 app.use('/blogs', blog_router)
 app.use('/category', category_router)
-app.use('/profile', auth.verifyUser, profile_router)
+app.use('/profile', profile_router)
 
 app.use('/image', express.static('uploads'))
 

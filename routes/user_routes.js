@@ -2,38 +2,17 @@ const express = require('express')
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const User = require('../Model/User')
-const { verifyUser } = require('../middleware/auth')
+const { verifyUser, verifyAdmin } = require('../middleware/auth')
 const profile_controller = require('../controllers/profile_controller')
+const blog_controller = require('../controllers/blog_controller')
+
+const upload = require('../middleware/upload')
 
 const router = express.Router()
 
-router.post('/',(req, res, next) => {
-    User.findOne({username: req.body.username})
-        .then(user => {
-            if(user != null){
-                let err = new Error(`User ${req.body.username} already exists`)
-                res.status(400)
-                return next(err)
-            }
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if(err) return next(err)
-                user = new User()
-                user.username = req.body.username
-                user.email = req.body.email
-                user.password = hash
-                if(req.body.role) user.role = req.body.role
-                user.save().then(user=>{
-                    res.status(201).json({
-                        'status': 'User has registered successfully',
-                        userId: user._id,
-                        username: user.username,
-                        email: user.email,
-                        role: user.role
-                    })
-                }).catch(next)
-            })
-        }).catch(next)
-})
+router.route('/')
+    .post(upload.single('image'), profile_controller.registerUser)
+    .get(verifyUser, verifyAdmin, profile_controller.getAllUsers)
 
 router.post('/login', (req,res,next) => {
     User.findOne({username: req.body.username})
@@ -69,8 +48,29 @@ router.post('/login', (req,res,next) => {
         }).catch(next)
 })
 
+
 router.route('/:user_id')
-    .get(verifyUser, profile_controller.getUserData)
+    .get(profile_controller.getUserData)
     .put(verifyUser, profile_controller.updateUser)
+
+router.use(verifyUser, verifyAdmin)
+    .route('/admin/blogs')
+    .get(blog_controller.getAllBlogs)
+    .delete(blog_controller.deleteAllBlogs)
+
+router.use(verifyUser, verifyAdmin)
+    .route('/admin/blogs/:id')
+    .get(blog_controller.deleteABlog)
+
+router.use(verifyUser, verifyAdmin)
+    .route('/admin/manageusers')
+    .get(profile_controller.getAllUsers)
+    .delete(profile_controller.deleteAllUsers)
+
+router.use(verifyUser, verifyAdmin)
+    .route('/admin/manageusers/:user_id')
+    .delete(profile_controller.deleteAUser)
+
+
 
 module.exports = router

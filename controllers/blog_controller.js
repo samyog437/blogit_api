@@ -44,6 +44,7 @@ const createBlog = (req,res,next) => {
 const updateBlogById = (req, res, next) => {
     console.log('yay')
     console.log(req.params.id)
+    const {title, content} = req.body;
     Blog.findById(req.params.id)
         .then((blog) => {
             console.log(blog.user.toString())
@@ -54,7 +55,12 @@ const updateBlogById = (req, res, next) => {
                 return next(err)
             }
 
-            Blog.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
+            const updatedBlog = {title, content};
+            if(req.file) {
+                updatedBlog.image = req.file.filename;
+            }
+
+            Blog.findByIdAndUpdate(req.params.id, {$set: updatedBlog}, {new: true})
                 .then((blog) => {
                     console.log(blog)
                     res.json(blog)
@@ -80,17 +86,13 @@ const getABlog = (req, res, next) => {
         .populate('user','username')
         .populate('comments.commenter_id', 'username')
         .then((blog) => {
+            console.log(blog.user)
             const username = blog.user.username;
             console.log("Username:", username);
-            blog.comments.forEach((comment) => {
-                const commenterUsername = comment.commenter_id.username;
-                console.log("Commenter Username:", commenterUsername);
-            });
-            // res.json({blog:blog, commenterDetail:blog.comments, message:'This is Commenter Detail'})
+           
             res.json(blog)
         }).catch(next)  
 }
-
 
 
 // const deleteABlog = (req, res, next) => {

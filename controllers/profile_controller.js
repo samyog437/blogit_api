@@ -3,8 +3,8 @@ const User = require('../Model/User');
 const bcrypt = require('bcryptjs');
 
 const getUserBlog = (req, res, next) => {
-    const user_id = req.user.userId;
-    Blog.find({user: user_id})
+    const userId = req.params.user_id;
+    Blog.find({user: userId})
         .populate('user','username')
         .then((blogs) => {
             res.json(blogs);
@@ -78,10 +78,92 @@ const getUserData = async(req, res, next) => {
       res.status(500).json({ success: false, message: 'Server error' });
     }
   };
+
+  const registerUser = (req, res, next) => {
+    User.findOne({username: req.body.username})
+        .then(user => {
+            if(user != null){
+                let err = new Error(`User ${req.body.username} already exists`)
+                res.status(400)
+                return next(err)
+            }
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if(err) return next(err)
+                user = new User()
+                user.username = req.body.username
+                user.email = req.body.email
+                user.password = hash
+                if(req.body.role) user.role = req.body.role
+                if (req.file) user.image = req.file.path;
+                user.save().then(user=>{
+                    res.status(201).json({
+                        'status': 'User has registered successfully',
+                        userId: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role,
+                        image: user.image,
+                    })
+                }).catch(next)
+            })
+        }).catch(next)
+  }
+
+  const getAllUsers = (req, res, next) => {
+    User.find({})
+    .then((users) => {
+      console.log(users)
+      res.json(users);
+    }).catch(next)
+  }
+
+  const deleteAllUsers = (req, res, next) => {
+    User.find({ role: { $ne: "Admin" } })
+      .select("_id")
+      .then((users) => {
+        const userIds = users.map((user) => user._id);
+        return Promise.all([
+          User.deleteMany({ _id: { $in: userIds } }),
+          Blog.deleteMany({ user: { $in: userIds } }),
+        ]);
+      })
+      .then((result) => {
+        res.status(200).json({
+          message: `${result[0].deletedCount} users and ${result[1].deletedCount} blogs deleted successfully`,
+        });
+      })
+      .catch(next);
+  };
+  
+  const deleteAUser = (req, res, next) => {
+    const userId = req.params.user_id;
+  
+    User.findOneAndDelete({ _id: userId, role: { $ne: "Admin" } })
+      .then((user) => {
+        if (!user) {
+          let error = new Error("User not found or not authorized");
+          error.statusCode = 404;
+          throw error;
+        }
+        return Blog.deleteMany({ user: user._id });
+      })
+      .then((result) => {
+        res.status(200).json({
+          message: `${result.deletedCount} blogs and the user deleted successfully`,
+        });
+      })
+      .catch(next);
+  };
+  
+
   
   
 module.exports = {
     getUserBlog,
     getUserData,
     updateUser,
+    registerUser,
+    getAllUsers,
+    deleteAllUsers,
+    deleteAUser,
 }

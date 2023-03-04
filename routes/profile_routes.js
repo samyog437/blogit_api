@@ -25,9 +25,7 @@ const profile_controller = require('../controllers/profile_controller')
 //     .catch(next)
 // })
 
-router.route('/blogs')
-    .get(verifyUser,profile_controller.getUserBlog)
-
-
+router.route('/:user_id/blogs')
+    .get(profile_controller.getUserBlog)
 
 module.exports = router

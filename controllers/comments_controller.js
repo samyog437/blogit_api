@@ -2,24 +2,18 @@ const Blog = require("../Model/Blog")
 
 const getAllComments = (req, res, next) => {
     Blog.findById(req.params.id)
-        .populate({
-            path: 'comments',
-            populate: {
-                path: 'commenter_id',
-                select: 'username'
-            }
-        })
+        // .populate({
+        //     path: 'comments',
+        //     populate: {
+        //         path: 'commenter_id',
+        //         select: 'username'
+        //     }
+        // })
         .then((blog) => {
             res.json(blog.comments)
         })
         .catch(next)
 }
-
-const getUserByComment = (req, res, next) => {
-    Comment.findById(req.params.id)
-    
-}
-
 
 const createComment = (req, res, next) => {
     console.log(req.body)
@@ -49,7 +43,8 @@ const getCommentById = (req, res, next) => {
     Blog.findById(req.params.id)
         .then((blog) => {
             let comment = blog.comments
-                .find((item) => item.id == req.params.commenter_id)
+                .find((item) => item.id == req.params.comment_id)
+                // console.log(id)
             res.json(comment)
         }).catch(next)
 }
@@ -57,18 +52,19 @@ const getCommentById = (req, res, next) => {
 const updateCommentById = (req, res, next) => {
     Blog.findById(req.params.id)
         .then(blog => {
-            let comment = blog.comments.id(req.params.commenter_id)
+            let comment = blog.comments.id(req.params.comment_id)
             if(comment.commenter_id != req.user.userId) {
                 res.status(403)
                     return next(new Error('Not authorized'))
             }
             let updatedComments = blog.comments.map((item) => {
-                if(item.id == req.params.commenter_id) {
+                if(item.id == req.params.comment_id) {
                     if(item.commenter_id == req.user.userId)
-                        item.body == req.body.body
+                        item.body = req.body.body
                 }
                 return item
-            })
+            })  
+            console.log(updatedComments)
             blog.comments = updatedComments
             blog.save().then(b => res.json(b.comments))
         }).catch(next)
@@ -77,11 +73,11 @@ const updateCommentById = (req, res, next) => {
 const deleteCommentById = (req, res, next) => {
     Blog.findById(req.params.id)
         .then(blog => {
-            comment = blog.comments.find((item) => item.id == req.params.commenter_id)
-            if(comment.user == req.user.userId) {
+            comment = blog.comments.find((item) => item.id == req.params.comment_id)
+            if(comment.commenter_id == req.user.userId) {
                 let deletedComments = blog.comments.filter((item) => {
                         if(item.commenter_id == req.user.userId)
-                    return item.id != req.params.commenter_id
+                    return item.id != req.params.comment_id
                 })
                 blog.comments = deletedComments
                 blog.save().then(b => res.json(b.comments))
