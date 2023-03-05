@@ -12,7 +12,6 @@ const router = express.Router()
 
 router.route('/')
     .post(upload.single('image'), profile_controller.registerUser)
-    .get(verifyUser, verifyAdmin, profile_controller.getAllUsers)
 
 router.post('/login', (req,res,next) => {
     User.findOne({username: req.body.username})

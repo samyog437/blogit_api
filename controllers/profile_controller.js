@@ -14,17 +14,6 @@ const getUserBlog = (req, res, next) => {
 const getUserData = async(req, res, next) => {
     const userId = req.params.user_id;
     console.log(userId)
-  
-    // User.findById(userId)
-    //   .then((userData) => {
-    //     if (!userData) {
-    //       const error = new Error(`No user found with ID ${userId}`);
-    //       error.status = 404;
-    //       throw error;
-    //     }
-    //     res.status(200).json(userData);
-    //   })
-    //   .catch(next);
 
       try {
         const userData = await User.findById({ _id: userId });

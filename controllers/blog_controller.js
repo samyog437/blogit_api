@@ -29,7 +29,10 @@ const createBlog = (req,res,next) => {
     console.log(blog)
     Blog.create(blog)
         .then((blog) => {
-            res.status(201).json(blog)
+            res.status(201).json({
+                status:'Blog has been created successfully',
+                blog:blog
+            })
         }).catch(next)
 }
 
@@ -86,7 +89,7 @@ const getABlog = (req, res, next) => {
         .populate('user','username')
         .populate('comments.commenter_id', 'username')
         .then((blog) => {
-            console.log(blog.user)
+            // console.log(blog.user)
             const username = blog.user.username;
             console.log("Username:", username);
            
@@ -117,7 +120,9 @@ const deleteABlog = (req, res, next) => {
         Blog.findByIdAndDelete(req.params.id)
           .then((blog) => {
             console.log('Blog post deleted successfully');
-            res.json(blog)
+            res.json({
+                status:'Blog has been deleted successfully',
+               blog:blog})
           }).catch(next);
       }).catch(next);
   };
