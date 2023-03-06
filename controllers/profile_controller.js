@@ -17,6 +17,7 @@ const getUserData = async(req, res, next) => {
 
       try {
         const userData = await User.findById({ _id: userId });
+        console.log(userData)
         if (!userData) {
           const error = new Error(`No user found with ID ${userId}`);
           error.status = 404;
